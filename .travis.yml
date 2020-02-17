@@ -1,0 +1,20 @@
+language: generic
+services:
+  - docker
+
+before_install:
+  - docker build -t fibonacci-client-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true fibonacci-client-test npm test
+
+after_success:
+  - docker build -t christherama/fibonacci-client ./client
+  - docker build -t christherama/fibonacci-nginx ./nginx
+  - docker build -t christherama/fibonacci-server ./server
+  - docker build -t christherama/fibonacci-worker ./worker
+  - docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD"
+  - docker push christherama/fibonacci-client
+  - docker push christherama/fibonacci-nginx
+  - docker push christherama/fibonacci-server
+  - docker push christherama/fibonacci-worker
