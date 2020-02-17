@@ -18,3 +18,16 @@ after_success:
   - docker push christherama/fibonacci-nginx
   - docker push christherama/fibonacci-server
   - docker push christherama/fibonacci-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: us-west-2
+  app: fibonacci
+  env: Fibonacci-env
+  bucket: elasticbeanstalk-us-west-2-130318069880
+  bucket_path: udemy-fibonacci
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
